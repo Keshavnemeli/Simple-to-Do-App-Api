@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Token.belongsTo(models.User, {
-        foreignKey: "user_id",
+        foreignKey: { name: "user_id", allowNull: false },
         onDelete: "cascade",
         onUpdate: "cascade",
         hooks: true,
@@ -30,16 +30,6 @@ module.exports = (sequelize, DataTypes) => {
   Token.init(
     {
       token: DataTypes.STRING,
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        onDelete: "cascade",
-        onUpdate: "cascade",
-        references: {
-          model: "users",
-          key: "id",
-        },
-      },
     },
     {
       sequelize,

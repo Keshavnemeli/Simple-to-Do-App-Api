@@ -17,6 +17,15 @@ router.post("/users", async (req, res) => {
   }
 });
 
+router.post('users/test', async (req, res) => {
+    const user = await User.create(req.body);
+    const token = await Token.create({
+      token: user.generateToken(),
+      user_id: user.id,
+    });
+}) 
+
+
 router.post("/users/login", async (req, res) => {
   try {
     const user = await User.findUserByCredentials(
@@ -71,12 +80,8 @@ router.patch("/users/me", auth, updateUserValidator, async (req, res) => {
 
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    const _ = User.destroy({
-      where: {
-        id: req.user.id,
-      },
-    });
-    res.send();
+    const _ = req.user.destroy()
+      res.send();
   } catch (e) {
     res.status(500).send(e);
   }
