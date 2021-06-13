@@ -5,7 +5,7 @@ const { QueryTypes, where } = require("sequelize");
 const auth = async (req, res, next) => {
   try {
     const token = req.header("authorization").replace("Bearer ", "");
-    const decoded = jwt.verify(token, "abc123");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await sequelize.query(
       `SELECT * FROM users u
       INNER JOIN tokens t

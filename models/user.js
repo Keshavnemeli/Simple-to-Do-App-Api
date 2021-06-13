@@ -11,8 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Task, { foreignKey: "user_id" });
-      User.hasMany(models.Token, { foreignKey: "user_id" });
+      User.hasMany(models.Task, {
+        foreignKey: "user_id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        hooks: true,
+      });
+      User.hasMany(models.Token, {
+        foreignKey: "user_id",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        hooks: true,
+      });
       // define association here
     }
 
@@ -20,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        throw new Error("Unable to login");
+        throw new Error("User not found. Please signup and try again.");
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        throw new Error("Unable to login");
+        throw new Error("Invalid Password");
       }
 
       return user;
@@ -34,7 +44,10 @@ module.exports = (sequelize, DataTypes) => {
 
     generateToken = function () {
       const user = this;
-      const token = jwt.sign({ id: user.id.toString() }, "abc123");
+      const token = jwt.sign(
+        { id: user.id.toString() },
+        process.env.JWT_SECRET
+      );
       return token;
     };
 
@@ -47,6 +60,11 @@ module.exports = (sequelize, DataTypes) => {
       delete userObject.createdAt;
       delete userObject.updatedAt;
       return userObject;
+    };
+    getUserHashedPassword = function () {
+      const user = this;
+      const userObject = user.get({ plain: true });
+      return userObject.password;
     };
   }
 

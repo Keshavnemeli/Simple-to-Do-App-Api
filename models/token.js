@@ -10,9 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Token.belongsTo(models.User, {
         foreignKey: { name: "user_id", allowNull: false },
-        onDelete: "cascade",
-        onUpdate: "cascade",
-        hooks: true,
       });
     }
 

@@ -17,14 +17,13 @@ router.post("/users", async (req, res) => {
   }
 });
 
-router.post('users/test', async (req, res) => {
-    const user = await User.create(req.body);
-    const token = await Token.create({
-      token: user.generateToken(),
-      user_id: user.id,
-    });
-}) 
-
+router.post("users/test", async (req, res) => {
+  const user = await User.create(req.body);
+  const token = await Token.create({
+    token: user.generateToken(),
+    user_id: user.id,
+  });
+});
 
 router.post("/users/login", async (req, res) => {
   try {
@@ -39,8 +38,8 @@ router.post("/users/login", async (req, res) => {
     });
 
     res.send({ user, token: token.token });
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
   }
 });
 
@@ -80,8 +79,8 @@ router.patch("/users/me", auth, updateUserValidator, async (req, res) => {
 
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    const _ = req.user.destroy()
-      res.send();
+    const _ = req.user.destroy();
+    res.send();
   } catch (e) {
     res.status(500).send(e);
   }
