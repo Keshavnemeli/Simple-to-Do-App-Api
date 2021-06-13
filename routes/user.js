@@ -13,16 +13,9 @@ router.post("/users", async (req, res) => {
     });
     res.status(201).send({ user, token: token.token });
   } catch (e) {
+    console.log(e.message)
     res.status(400).send(e);
   }
-});
-
-router.post("users/test", async (req, res) => {
-  const user = await User.create(req.body);
-  const token = await Token.create({
-    token: user.generateToken(),
-    user_id: user.id,
-  });
 });
 
 router.post("/users/login", async (req, res) => {
