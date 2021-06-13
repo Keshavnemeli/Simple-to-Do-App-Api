@@ -6,7 +6,7 @@ const userRouter = require("../routes/user");
 const taskRouter = require("../routes/task");
 
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 app.use(userRouter);
 app.use(taskRouter);
 
